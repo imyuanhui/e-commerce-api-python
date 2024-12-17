@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from userauths.forms import UserRegisterForm
+from userauths.forms import UserRegisterForm, AuthenticationForm
 from django.contrib.auth import login, authenticate
 from django.contrib import messages
 
@@ -22,3 +22,18 @@ def register_view(request):
         'form': form,
     }
     return render(request, "userauths/sign-up.html", context)
+
+def login_view(request):
+    if request.method == "POST":
+        form = AuthenticationForm(data=request.POST) # data is not the first argument of authenticationform
+        if form.is_valid():
+            login(request, form.get_user())
+            return redirect("core:index")
+    else:
+        form = AuthenticationForm()
+        print("User cannot login.")
+
+    context = {
+        'form': form,
+    }
+    return render(request, "userauths/login.html", context)
