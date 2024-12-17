@@ -1,10 +1,9 @@
 from django.shortcuts import redirect, render
-from userauths.forms import UserRegisterForm, AuthenticationForm
+from userauths.forms import UserRegisterForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from django.conf import settings
-
-User = settings.AUTH_USER_MODEL
+from django.db.models import Q
+from .models import User
 
 # Create your views here.
 def register_view(request):
@@ -32,23 +31,22 @@ def login_view(request):
         return redirect("core:index")
     
     if request.method == "POST":
-        email = request.POST.get("email")
+        identifier = request.POST.get("identifier")
         password = request.POST.get("password")
-        try:
-            user = User.objects.get(email=email)
-        except:
-            print("User doesn't exist")
-            messages.warning(request, f"User with {email} does not exist.")
-        
-        user = authenticate(request, email=email, password=password)
 
-        if user:
-            login(request, user)
-            messages.success(request, f"Loggged in.")
-            return redirect("core:index")
-        else:
-            messages.warning(request, "User does not exist")
-    return render(request, "userauths/login.html")       
+        user = None
+        try:
+            user_object = User.objects.get(Q(email=identifier) | Q(username=identifier))
+            user = authenticate(request, username=user_object.email, password=password)
+            if user is not None:
+                login(request, user)
+                messages.success(request, "Logged in successfully.")
+                return redirect("core:index")
+            else:
+                messages.error(request, "Invalid credentials. Please try again.")
+        except:
+            messages.error(request, "Invalid user or password. Please try again.")
+    return render(request, "userauths/login.html")    
 
 def logout_view(request):
         logout(request)
