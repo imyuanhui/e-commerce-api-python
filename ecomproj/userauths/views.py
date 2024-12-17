@@ -35,8 +35,9 @@ def login_view(request):
         email = request.POST.get("email")
         password = request.POST.get("password")
         try:
-            user = User.ojects.get(email=email)
+            user = User.objects.get(email=email)
         except:
+            print("User doesn't exist")
             messages.warning(request, f"User with {email} does not exist.")
         
         user = authenticate(request, email=email, password=password)
@@ -44,11 +45,12 @@ def login_view(request):
         if user:
             login(request, user)
             messages.success(request, f"Loggged in.")
+            return redirect("core:index")
         else:
             messages.warning(request, "User does not exist")
-    
-    context = {
+    return render(request, "userauths/login.html")       
 
-    }
-
-    return render(request, "userauths/login.html", context)       
+def logout_view(request):
+        logout(request)
+        messages.warning(request, "You logged out.")
+        return redirect("userauths:login")
