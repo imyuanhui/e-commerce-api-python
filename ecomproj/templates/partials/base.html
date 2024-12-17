@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
     <title>Document</title>
   </head>
+  {% if request.user.is_authenticated %}
   <a href="{% url 'userauths:logout' %}">Logout</a>
-  {% block content %} {% endblock content %}
+  {% else %}
+  <a href="{% url 'userauths:login' %}">Login</a>
+  {% endif %} {% block content %} {% endblock content %}
 </html>
