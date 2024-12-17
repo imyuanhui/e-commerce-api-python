@@ -7,5 +7,6 @@
     <link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
     <title>Document</title>
   </head>
+  <a href="{% url 'userauths:logout' %}">Logout</a>
   {% block content %} {% endblock content %}
 </html>
