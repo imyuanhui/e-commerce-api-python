@@ -108,3 +108,41 @@ class Book(models.Model):
     
     def get_percentage(self):
         return (self.price / self.old_price) * 100
+
+class BookImages(models.Model):
+    images = models.ImageField(upload_to="book-images", default="book.jpg")
+    book = models.ForeignKey(Book, on_delete=models.SET_NULL, null=True)
+    date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = "Book Images"
+
+
+################################### CartOrder, CartOrderItems ###################################
+
+
+class CartOrder(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    price = models.DecimalField(max_digits=9999999, decimal_places=2, default="1.99")
+    paid_status = models.BooleanField(default=False)
+    order_date = models.DateTimeField(auto_now_add=True)
+    order_status = models.CharField(choices=STATUS_CHOICE, max_length=30, default="processing")
+
+    class Meta:
+        verbose_name_plural = "Cart Order"
+
+class CartOrderItems(models.Model):
+    order = models.ForeignKey(CartOrder, on_delete=models.CASCADE)
+    order_status = models.CharField(max_length=200)
+    item = models.CharField(max_length=200)
+    image = models.CharField(max_length=200)
+    qty = models.IntegerField(default=0)
+    price = models.DecimalField(max_digits=9999999, decimal_places=2, default="1.99")
+    total = models.DecimalField(max_digits=9999999, decimal_places=2, default="1.99")
+
+    class Meta:
+        verbose_name_plural = "Cart Order Items"
+
+    def order_image(self):
+        return mark_safe('<img src="/media/%s" width="50" height="50" />' % (self.image))
+    
