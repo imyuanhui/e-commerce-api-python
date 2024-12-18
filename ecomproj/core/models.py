@@ -86,7 +86,7 @@ class Product(models.Model):
     old_price = models.DecimalField(max_digits=9999999, decimal_places=2, default="2.99")
 
     specifications = models.TextField(null=True, blank=True)
-    tags = models.ForeignKey(Tags, on_delete=models.SET_NULL, null=True)
+    # tags = models.ForeignKey(Tags, on_delete=models.SET_NULL, null=True)
 
     product_status = models.CharField(choices=STATUS, max_length=10, default="in_revew")
     
