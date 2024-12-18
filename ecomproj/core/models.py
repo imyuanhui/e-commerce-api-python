@@ -133,6 +133,7 @@ class CartOrder(models.Model):
 
 class CartOrderItems(models.Model):
     order = models.ForeignKey(CartOrder, on_delete=models.CASCADE)
+    invoice_no = models.CharField(max_length=200)
     order_status = models.CharField(max_length=200)
     item = models.CharField(max_length=200)
     image = models.CharField(max_length=200)
@@ -157,7 +158,7 @@ class Review(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name_plural = "Products"
+        verbose_name_plural = "Reviews"
     
     def __str__(self):
         return self.product.title
