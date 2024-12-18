@@ -50,11 +50,11 @@ class Tags(models.Model):
 
 class Vendor(models.Model):
     vid = ShortUUIDField(unique=True, length=5, max_length=10, prefix="ven", alphabet="abcdefgh12345")
-    title = models.CharField(max_length=100, default="Book Owner")
+    title = models.CharField(max_length=100, default="product Owner")
     image = models.ImageField(upload_to=user_directory_path, default="vendor.jpg")
-    description = models.TextField(null=True, blank=True, default="I love books!")
+    description = models.TextField(null=True, blank=True, default="I love products!")
 
-    address = models.CharField(max_length=100, default="123 Book Street")
+    address = models.CharField(max_length=100, default="123 product Street")
     contact = models.CharField(max_length=100, default="123 456 7890")
     shipping_on_time = models.CharField(max_length=100, default="100")
     authentic_rating = models.CharField(max_length=100, default="100")
@@ -73,11 +73,11 @@ class Vendor(models.Model):
         return self.title
     
 
-class Book(models.Model):
-    bid = ShortUUIDField(unique=True, length=5, max_length=10, alphabet="abcdefgh12345")
-    title = models.CharField(max_length=100, default="Book")
-    image = models.ImageField(upload_to=user_directory_path, default="book.jpg")
-    description = models.TextField(null=True, blank=True, default="This is a book.")
+class Product(models.Model):
+    pid = ShortUUIDField(unique=True, length=5, max_length=10, alphabet="abcdefgh12345")
+    title = models.CharField(max_length=100, default="product")
+    image = models.ImageField(upload_to=user_directory_path, default="product.jpg")
+    description = models.TextField(null=True, blank=True, default="This is a product.")
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
@@ -88,7 +88,7 @@ class Book(models.Model):
     specifications = models.TextField(null=True, blank=True)
     tags = models.ForeignKey(Tags, on_delete=models.SET_NULL, null=True)
 
-    book_status = models.CharField(choices=STATUS, max_length=10, default="in_revew")
+    product_status = models.CharField(choices=STATUS, max_length=10, default="in_revew")
     
     status = models.BooleanField(default=True)
     in_stock = models.BooleanField(default=True)
@@ -98,7 +98,7 @@ class Book(models.Model):
     updated = models.DateTimeField(null=True, blank=True)
 
     class Meta:
-        verbose_name_plural = "Books"
+        verbose_name_plural = "Products"
     
     def category_image(self):
         return mark_safe('<img src="%s" width="50" height="50" />' % (self.image.url))
@@ -109,13 +109,13 @@ class Book(models.Model):
     def get_percentage(self):
         return (self.price / self.old_price) * 100
 
-class BookImages(models.Model):
-    images = models.ImageField(upload_to="book-images", default="book.jpg")
-    book = models.ForeignKey(Book, on_delete=models.SET_NULL, null=True)
+class productImages(models.Model):
+    images = models.ImageField(upload_to="product-images", default="product.jpg")
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
     date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name_plural = "Book Images"
+        verbose_name_plural = "Product Images"
 
 
 ################################### CartOrder, CartOrderItems ###################################
