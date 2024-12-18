@@ -145,4 +145,41 @@ class CartOrderItems(models.Model):
 
     def order_image(self):
         return mark_safe('<img src="/media/%s" width="50" height="50" />' % (self.image))
+
+
+################################### Review, Favorites, Address ###################################
+
+class Review(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
+    review = models.TextField()
+    rating = models.IntegerField(choices=RATING, default=None)
+    date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = "Products"
     
+    def __str__(self):
+        return self.product.title
+    
+    def get_rating(self):
+        return self.rating
+    
+class Favorites(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
+    date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = "Favorites"
+    
+    def __str__(self):
+        return self.product.title
+
+class Address(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    address = models.CharField(max_length=100, null=True)
+    status = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name_plural = "Address"
